@@ -1,0 +1,58 @@
+- Require function: allows to have other modules into your main module
+
+- You cannot access the variables, methods and functions of one module into another simply by requiring it.
+
+- Modules are protected by default
+
+- By default common JS modules is enabled
+
+- Common JS Modules (cjs)
+  - module.exports
+  - require()
+  - by default used in node js
+  - also known as cjs
+  - old way
+  - synchronous calls
+  - run in non strict mode
+
+- ES Modules (mjs)
+  - use import and export statement
+  - by default used in react
+  - also known as esm
+  - newer way
+  - async option 
+  - Also known as ES6 Modules
+  - code runs in strict mode
+
+- Synchronous vs Asynchronous: CommonJS requires. modules in a synchronous manner, meaning the next line of code will execute only after the module has been loaded. In contrast, ES modules load modules asynchronou, allowing for more efficient and flexible code execution. This distinction is a powerful feature and an important point to remember.
+
+- Strict Mode: Another significant difference is that CommonJS code runs in non strict mode, while ES modules execute in strict mode. This means that ES modules enforce stricter parsing and error handling, making them generally safer and more reliable.
+
+
+- module.exports is an empty object
+
+- Module is a collection of javascript code which is seperate and private to itself
+
+========================================================================================================================================================================================================================================================================================================================================================================================
+
+
+How do you make two modules work together?
+- using a require function
+
+What is the required function?
+- In Node.js, the require() function is a built in function that allows you to include or require other modules into your main modules.
+
+
+- Modules protect their variables and functions from leaking by default.
+- To use private variables and functions in other modules, you need to export them. This allows other pasrts of your application ro access and utilize those variables and functions.
+
+What is module.exports ?
+- module.exports is an empty object by default
+
+- There are some modules that are built into the core of Node.js, one of which is the util module, You can import it like this 
+    const util = require('node:util');
+  - the util object contains a variety of useful functions and properties.
+
+- A module can be a single file or folder. A module is essentially a collection of javascript code that is private and organized separately. If you want to export something from a module, you can use module.exports to expose the desired functionality to other parts of your application.
+
+
