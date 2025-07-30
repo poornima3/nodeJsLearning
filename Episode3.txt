@@ -1,0 +1,19 @@
+Node REPL(Read, Evaluate, Print, Loop)
+
+- The window object is a global object provided by the browser, not by the V8 engine
+- In Node.js, the global object is known as global, which is equivalent to the window object in the browser.
+- A global object is not a part of the V8 engine, instead it is a feature provided by Node.js
+- This global object offers various functionalities, such as setTimeout(), setInterval() and more.
+
+NOTE:
+ console.log(this); // Outputs: {}
+
+- When you use console.log(this) at the global level in Node.js it will log an empty object, indicating that this does not refer to the global object in this context.
+
+GlobalThis
+- is always a global object, regardless of where it is accessed.
+- It was introduced in ECMAScript 2020 to provide a standardized way to refer to the global object in any enviornment (browsers, Node.js, etc)
+- In browsers, global is equivalent to window
+- In Node.js, globalThis is equivalent to global
+- It provides a consistent way to access the global object without worrying about the environment.
+

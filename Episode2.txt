@@ -1,0 +1,34 @@
+What is server?
+- A server is essentially a remote computer.
+- you can think of it as a computer whose CPU works remotely
+- Servers can be accessed over a network to provide resources and services to other computer programs.
+
+- A server is a computer or system that provides data, services, resources, or programs to other computers, known as clients, over a network.
+- Behind the scenes, when a computer needs to communicate with a server, it sends a request to the server using its IP address. Initially, JavaScript could only be executed within the web browsers, limiting its use to client-side taks. However, with the introduction of Node.js, Javascript can now also be executed on servers, allowing developers to use the same language for both client-side and server-side programming.
+
+What is IP address?
+- An IP address, or Internet Protocol address, is a unique number that identifies every device connected to the Internet
+
+What is V8?
+- V8 is Google's open source high performance JavaScript and Web Assembly engine, written in C++.
+- It is sed in Chrome and in Node.js among others.
+- It implements ECMAScript and WebAssembly, and runs on Windows, macOS, and Linux systems that use x64, IA-32, or ARM processors.
+- V8 can be embedded into any C++ application.
+- V8 JavaScript engine is written in C++.
+- JavaScript code is executed by V8 which then compiles it down to machine code that the computer can execute.
+
+- Node JS is a C++ application with V8 embedded into it.
+
+- ECMAScript is standard for scripting languages, including JavaScript, JScript and ActionScript. It is best known as the standard that defines JavaScript.
+- ECMAScript standards are followed by JavaScript engines like V8, SpiderMonkey, Chakra and others to ensure consistent behaviour across different enviornments.
+
+- V8 engines has to follow this ECMA standards and node.js has V8 engine, but nodejs also has some superpowers, such as api calls on servers, which make it more powerfull than V8 engines alone, which cannot do database connections, api calls, etc. because of ECMA standards and this is known as the JS runtime.
+
+- We write JS, and then the V8 engine translates it into machine and assembly code - also know as low level code - so the machine can understand it. It is amazing how our high level scripts transform into the instructions that power our apps!
+
+- Low level code refers to programming languages or code that is closer to machine languge and hardware. 
+- It provides little abstraction from the computers architecture and allows for fine-grained control over system resources.
+- Here are some key points about low-level code:
+  - Machine Language: The most basic form of low level code, consisting of binary (0s and 1s) instructions that the computer's CPU can directly execute.
+  - Assembly Language: A step above machine language, assembly language uses symbloic representations (mnemonics) for operatrions and memory address, making it somewhat easier for humans to read and write. Each assembly instruction corresponds to a specific machine language instruction.
+
