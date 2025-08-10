@@ -1,0 +1,201 @@
+- require("./path")
+- All the code of the module is wraped inside a function (IIFE)
+- IIFE - Immediately Invoked Function Expression
+  - (function(module, require){
+    // All the code of the module runs inside here
+    console.log("IIFE");
+  })();
+  - Privacy: keeps your variables and functions safe
+
+- How are variables and functions private in different module?
+  - IIFE (wrapping code) and require statement
+
+- How do you get access to module.exports
+  - NodeJS passes (module) as a parameter to the IIFE
+
+- Steps involved durinf require(/path)
+  1. Resolving the module
+    -> /localpath
+    -> .json
+    -> node:module
+  2. Loading the module
+    - file content is loaded according to the file type
+  3. Wraps inside IIFE (compile step)
+  4. Evaluation 
+    - module.exports happen here
+  5. Caching
+
+- NOTE: Whenever you write any JS code, this is not directly passed into v8, it is wrapped into a IIFE and then passed to v8
+
+- libuv in the most amazing (library) super power that node JS has
+  
+- inside any github repo, if you want to enter the code just press '.'
+
+- console.log(__filename);
+  console.log(__dirname);
+  
+  - __dirname and __filename is coming from node JS wrapped code
+
+
+
+
+======================NOTES FROM RESOURCES================================================
+
+
+- imp concept 🧐
+- Modules in Node.js work similarly to function scopes. When you require a file,
+Node.js wraps the code from that file inside a function. This means that all
+variables and functions in the module are contained within that function’s
+scope and cannot be accessed from outside the module unless explicitly
+exported.
+- To expose variables or functions to other modules, you use module.exports . This
+allows you to export specific elements from the module, making them
+accessible when required elsewhere in your application.
+- All the code of a module is wrapped inside a function when you call require .
+This function is not a regular function; it’s a special type known as an IIFE
+(Immediately Invoked Function Expression). Here’s how it works:
+
+(function () {
+ // All the code of the module runs inside here
+})();
+
+
+In Node.js, before passing the code to the V8 engine, it wraps the
+module code inside an IIFE. The purpose of IIFE is to:
+1. Immediately Invoke Code: The function runs as soon as it is defined.
+2. Keep Variables and Functions Private: By encapsulating the code within the
+IIFE, it prevents variables and functions from interfering with other parts of the
+code. This ensures that the code within the IIFE remains independent and
+private.
+Using IIFE solves multiple problems by providing scope isolation and immediate
+execution.
+
+
+very Imp:
+Q1: How are variables and functions private in different modules?
+A:
+because of IIFE and the requirement (statement) wrapping code inside IFE.
+
+
+Q2: How do you get access to module.exports ? Where does this
+module come from?
+A:
+In Node.js, when your code is wrapped inside a function, this function has a
+parameter named
+module . This parameter is an object provided by Node.js that includes
+module.exports.
+
+- module.exports = { calculateMultiply }
+
+- where is this module coming from?
+ - Node JS is adding this module.
+
+ - In Node JS, when your code is wrapped inside a function, this function has a parameter named module. This parameter is an object provided by Node JS that includes module.exports
+
+   (function(module){
+    function calculateMultiply(a, b){
+      const result = a * b;
+      console.log(result);
+    }
+    module.exports = { calculateMultiply }
+   })(module);
+
+  - When you use module.exports, you are modifying the exports object of the current module. Node JS relies on this object to dertermine what will be exported from the module when it is required in another file.
+  - The module object is automatically provided by Node JS and is passed as a parameter to the function that wraps your code. This mechanism allows you to define which parts of your module are accessible externally
+
+- How require() works behind the scenes.
+  1. Resolving the Module
+      - Node JS first determines the path of the module. It checks whether the path is a local file(./local), a JSON file(.json), or a module from the node_modules director, among other possibilities.
+  2. Loading the Module
+     - Once the path is resolved, Node JS loads the file content based on its type. The loading process varies depending on whether the file is JavaScript, JSON, or another type.
+
+  3. Wrapping inside the IIFE
+     - The module code is wrapped in an immediately Invoked Function Expression (IIFE). The wrapping helps encapsulate the module's scope, keeping variables and functions private to the module.
+
+  4. Code Evaluation and Module exports
+     - After wrapping, Node JS evaluates the module's code. During this evaluation, module.exports is set to export the module's functionality or data. This step essentially makes the module's export available to other files.
+
+  5. Caching (very imp)
+     - Importance : Caching is crucial for performance. Node JS caches the result of the require() call so that the module is only loaded and executed once.
+
+
+Example
+- Scenario: Suppose you have three files: sum.js, app.js and multiply.js. All three files require a common module named xyz.
+
+- Initial Require: 
+  - When sum.js first requires xyz with require('./xyz'), Node Js performs the full require() process for xyz:
+    1. Resolving the path to xyz.
+    2. Loading the content of xyz.
+    3. wrapping the code in IIFE.
+    4. Evaluating the code and setting module.exports
+    5. Caching is the result.
+
+  - Node JS creates a cached entry for xyz that includes the evaluated module exports.
+
+  - Subsequent Requires:
+    - When app.js and multiply.js later require xyz using require('./xyz'), Node JS skips the initial loading and evaluation steps. Instead, it retrieves the module from the cache.
+    - This means that for app.js and multiply.js, Node JS return the cached module.exports without going through the resolution, loading and wrapping steps again.
+
+  - Impact on performance
+    - Id caching did not exists, each require('./xyz') call would repeat the full module loading and evalution process. This would result in a performance overhead, especially if xyz is a large or complex module and is required by many files
+    - With caching, Node JS effeciently reuses the module's loaded and evaluated code, significantly speeding up module resolution and reducing overhead.
+
+
+- https://github.com/nodejs
+
+- 1. NodeJs is an open-source Project
+  2. I will now show you how the V8 JavaScript engine is integrated within the Node.js GitHub repository to illustrate its role and interaction with Node.js.
+  3. when i say there are superpowers, what are this superpowers? This is all the
+code for the superpowers
+  4. Libuv is the most amazing superpower
+
+
+- Node.js is popular just because of libuv
+libuv plays a critical role in enabling Node.js's high performance and
+scalability. It provides the underlying infrastructure for asynchronous I/O,
+event handling, and cross-platform compatibility.
+
+- In the Node.js repository, if you navigate to the
+lib directory, you'll find the core JavaScript code for Node.js. This lib folder
+contains the source code for various built-in modules like http , fs , path , and
+more. Each module is implemented as a JavaScript file within this directory.
+
+- Where is setTimeout coming from and how it work behind
+scenes ?
+
+  - https://github.com/nodejs/node/blob/main/lib/timers/promises.js
+
+
+- In helper.js file, you can find the actual implementation of require method Here is
+where the required function is formed
+go to this path node/lib/internal/modules/helper.js
+https://github.com/nodejs/node/blob/main/lib/internal/modules/helpers.js
+
+- the makeRequireFunction creates a custom require function for a given module mod.
+This function:
+  - Validates that mod is an instance of Module.
+  - Defines a require function that uses mod.require() to load modules.
+  - Implements a resolve method for resolving module paths using
+Module.
+      resolveFilename().
+  - Implements a paths method for finding module lookup paths using
+Module.
+      resolveLookupPaths().
+  - Sets additional properties on the require function, such as main , extensions ,
+and cache.
+
+
+- LazyModule()
+https://github.com/nodejs/node/blob/main/lib/internal/modules/cjs/loader.js
+
+- If the id argument provided to the require() function is empty or undefined,
+Node.js will throw an exception. This is because the require() function expects a string representing the path or identifier of the module to load. When it
+receives undefined instead, it results in a TypeError , indicating that an invalid
+argument value was provided.
+
+- Node.js documentation and GitHub repository provide insights into how
+require() handles module loading. Reviewing these resources can help you
+understand how to properly use require() and handle potential errors.
+
+
+
