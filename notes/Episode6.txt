@@ -1,0 +1,110 @@
+Libuv & async I/O
+==================
+
+- JavaScript: is a synchronous single threaded language
+- Asynchronous: Non blocking
+- Synchronous: blocking
+
+- JavaScript is synchronous but node provides the ability of asynchronous
+
+- LIBUV:- Async I/O made simple
+        - Written in C language
+
+- NODE JS can do asynchronous I/O with libuv
+  - non blocking I/O : not blocking the main thread
+
+========================
+
+LIBUV & ASYNC I/O - The Dynamic Duo of Node JS
+
+- Node JS has an event driven architecture capable of asynchronous I/O.
+
+- What is Thread?
+  - A thread is the smallest unit of execution within a process in an operating system.
+  - It represents a single sequence of instructions that can be managed independently by a scheduler.
+  - Multiple threads can exists within a single proces, sharing the same memory space but executing independently. This allows for parallel execution of tasks within a program, improving efficiency and responsiveness.
+
+  - Threads can be either: 
+    1) Single threaded
+    2) Multi-threaded
+
+- What type of threading does Javascript use?
+  - JavaScript is synchronous, single threaded language, meaning there is only one thread in which the JavaScript Engine (such as the V8 engine) runs. In JavaScript, code is executed line by line within this single thread
+
+  - In other languages like C++ or JAVA, code can be executed across multiple threads. For example, a portion of the code might be executed in one thread, while another part runs simultaneously in a different thread. However, JavaScript handles this process more straightforwardly - executing code one line after the other in sequence.
+
+  - So if you are executing line 2 in javascript, it will only run after line 1 has finished executing. This is the essence of synchronous execution: each task is performed oine after the other, without overlap.
+
+
+- What is a synchronous system?
+  In a synchronous system, tasks are completed one after another.
+
+- What is an Asynchronous System?
+  In this system, tasks are completed independently.
+
+- JavaScript itself is synchronous, but with the power of Node JS it can handle asynchronous operations, allowing JavaScript to perform multiple tasks concurrently.
+
+- What are the portions inside the JS engine and How synchronous code is executed by JS engine?
+  - The JavaScript engine operates with a single call stack, and all the code you write is executed within the call stack. The engine runs on a single thread, meaning it can only perform one operation at a time.
+
+  - In addition to the callstack, the javascript engine also includes a memory heap. This memory heap stores all the variables, numbers, and functions that your code uses.
+
+  - One key feature of the Javascript V8 engine is its garbage collector. The garbage collector automatically identifies and removes variables that are no longer in use, freeing up memory. Unlike languages like C++, where developers need to manually allocate and deallocate memory, JavaScript handles this process automatically. This means you don't have to worry about memory management - it's all taken care of by the engine.
+
+- The CODE EXECUTION JOURNEY
+
+  Step: 1 (Global Execution Context Creation)
+  - As soon as the JavaScript engine begins executing the code, it creates a Global Execution Context. This is the main enviornment where the top-level code is executed. The global execution context is unique and is always the first to be pushed onto the call stack.
+
+  Step: 2 (Memory Creation Phase)
+  - Before the code is executed, the JavaScript engine enters the memory creation phase. During this phase:
+    - Variables a and b are declared in memory and initialized to undefined.
+    - the function multiplyFn is also stored in memory, with its value set to the entire function definition.
+
+  Step: 3 (Code Execution Phase)
+  - once the memory cresation phase is complete, the engine moves to the code execution phase:
+    - Execution of let a = 107; and let b = 201; the variables a and b are now assigned their respective values.
+    - Execution of let c = multiplyFn(a,b) the function multiplyFn is invoked, creating a new execution context specifically for this function. 
+
+  Step: 4 (Function Execution Context Creation)
+  - When the multiplyFn(a, b) is called, the JavaScript Engine:
+    - Creates a new execution context for multiplyFn and pushes it onto the top of the call stack
+    - In this new context, the parameters x and y are assigned the values of a and b.
+
+  Step: 5 (Memory Creation and Code Execution inside multiplyFn)
+  - Inside multiplyFn, the memory creation phase initializes result in memory with undefined.
+    - Execution of const result = a * b; The multiplication is performed and result in memory is assigned the values 226215682.
+    - Execution of return result; The function returns 226215682 and the multiplyFn execution context is popped off the stack.
+
+  Step: 6 (Resuming Global Execution Context)
+  - Back in the global execution context, the returned value from multiplyFn 226215682 is assigned to the variable c.
+
+  Step: 7 Once the entire code is executed, the global execution context is also popped out, and the call stack becomes empty.
+
+
+- The JS engine gains its superpower from Node.js. Node.js grants these powers through a library named libuv(our super hero)
+  - The JS engine cannot directly access OS files, so it calls on Libuv. Libuv, being very cool and full of superpowers, communicates with the OS, performs all the necessary tasks, and then returns the response to the JS engine. He offloads the work and does wonders behind the scene.
+  - The variables let a and let b are executed with the GEC (GLobal Execution context) during the synchronous phase of the code execution process
+  - However, when the code encounters an API call, the v8 engine, while still operating within the GEC, recognizes that it's dealing with an asynchronous operation. At this point, the v8 engine signals libuv to handle the API call.
+  - What happens next is that libuv registers this API call,including its associated callback function (name - A) within its event loop, allowing the v8 engine to continue executing the rest of the code without waiting for the API call to complete.
+  - Next, when the code encounters a setTimeout function, a similar processs occurs.
+  - The v8 engine identifies this as another asynchronous operation and once again notifies libuv.
+  - Following this, when the code reaches a file operation (like reading or writing a file), the process is similar.
+  - The v8 engine recognizes this as another asynchronous task and alerts libuv.
+  - libuv then registers the file operation and its callback in the event loop.
+  - Next when the code executes 
+    - let c = multiplyFn(a, b); the JavaScript engine creates a new function context for multiplyFn and pushes it onto the call stack.
+    - The function takes two parameters. x and y and within the function, the engine multiplies these values (a*b); and stores the result in the result variable.
+    - The JavaScript engine handles this operation as part of the synchronous code execution.
+    - Next, when the code executes let c = multiplyFn(a,b); the JavaScript engine creates a new function context for multiplyFn and pushes it onto the call stack.
+    - Once the multiplyFn completes its execution and resturns the result, the function context is popped off the call stack, and the result is assigned to the variable c.
+
+    - Important concept:
+      - When the function execution context is popped off the call stack, the garbage collector may clear any memory allocated for that context in the memory heap, if it is no longer needed.
+      - After console.log(c) is executed and the value of c is printed to the console, the global execution context will also eventually be removed from the call stack if the code execution is complete.
+      - With the global context popped off the call stack, the JavaScript engine has finished processing, and the program ends.
+      - Now the call stack becomes empty, the Javascript engine can relax, as there is no more code to execute.
+      - At this point, libuv takes over the major tasks. It handles operations such as processing timers, managing file system calls, and communicating with the operating system.
+      - libuv performs these heavy tasks in the background, ensuring that asynchronous operations continue to be managed effectively.
+      - In summary, Node.js excels in handling asynchronous I/O operations, thanks to its non-blocking I/O model.
+

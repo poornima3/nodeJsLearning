@@ -1,0 +1,57 @@
+Sync Vs Async & The magic of "SETTIMEOUT 0" - Code edition
+
+fs.readFileSync("./file/txt", "utf8");
+- This function reads the contents of a file synchronously, meaning it will actually block the main thread whilt its running.
+
+-  fs.readFileSync() —the main thread is blocked until the file is completely read
+
+Best Practice
+- Avoid using synchronous methods in production code whenever possible, especially in performance-critical applications, because they can slow down your application by blocking the event loop.
+- Instead, use asynchronous methods like fs.readFile() that allow other operations to continue while the file is being read, keeping the application responsive.
+
+Introducing the crypto Module
+- Node.js has a core library known as crypto , which is used for cryptographic operations like generating secure keys, hashing passwords, and more.
+
+What is crypto ?
+- The crypto module is one of the core modules provided by Node.js, similar to other core modules like https , fs (file system), and zlib (used for compressing files).
+- These core modules are built into Node.js, so when you write require('crypto') , you're importing a module that is already present in Node.js.
+- You can also import it using require('node:crypto') to explicitly indicate that it’s a core module, but this is optional.
+
+Example of Blocking Code with crypto
+- One of the functions provided by the crypto module is pbkdf2Sync , which stands for Password-Based Key Derivation
+- This function is used to generate a cryptographic key from a password and salt, and it operates synchronously.
+
+// synchronous
+crypto.pbkdf2Sync("password", "salt", 500000000, 50, "sha512");
+console.log("First key is generated");
+
+// asynchronous
+crypto.pbkdf2("password", "salt", 50000000, 50, "sha512", (err, key) => {
+  console.log("Second key is generated");
+})
+
+- The first key is generated first because it's synchronous, while the second key is generated afterward because it's asynchronous
+
+Here’s what this function does:
+ - Password and Salt: You provide a password and a salt value, which are combined to create a cryptographic key.
+ - Iterations: You specify the number of iterations (e.g., 50,000) to increase the  complexity of the key, making it harder to crack.
+ - Digest Algorithm: You choose a digest algorithm, like sha512 , which determines how the key is hashed.
+ - Key Length: You define the length of the key (e.g., 50 bytes).
+ - Callback: In the asynchronous version ( pbkdf2 ), a callback is provided to handle the result once the key is generated.
+
+- When you see Sync at the end of a function name (like pbkdf2Sync ), it means
+that the function is synchronous and will block the main thread while it’s
+running. This is something you should be cautious about, especially in
+performance-sensitive applications.
+
+Why Does This Matter?
+- Blocking Behavior: The synchronous version of pbkdf2 ( pbkdf2Sync ) will block the event loop, preventing any other code from executing until the key generation is complete. This can cause your application to become unresponsive if used inappropriately.
+
+- Asynchronous Alternative: Node.js also provides an asynchronous version ( pbkdf2 without the Sync suffix), which offloads the operation to Libuv. This allows the event loop to continue processing other tasks while the key is being generated.
+
+- Asynchronous Operation: setTimeout is an asynchronous function, meaning it doesn't block the execution of the code. When you call setTimeout , the callback function is passed to Libuv (Node.js's underlying library), which manages asynchronous operations.
+
+- Event Loop and Call Stack: The callback function from setTimeout(0) is added to the event queue. However, it won't be executed until the current call stack is empty. This means that even if you specify a 0-millisecond delay, the callback will only execute after the global execution context is done
+
+- Trust Issues with setTimeout(0): When you ask the code to run after 0 milliseconds, it doesn't necessarily run immediately after that time. It runs only when the call stack is empty. This introduces some "terms and conditions," meaning that the actual execution timing is dependent on the state of the call stack
+
