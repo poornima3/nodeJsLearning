@@ -7,10 +7,10 @@
 const { calculateMultiply, calculateSum } = require("./calculate");
 require('./xyz.js') // one module into another
 
-function() {
+// function() {
   // All the code of the module is run inside this function
   // all the variables and methods that are thier in xyz.js module cannot be accessed directly outside, unless they are exported
-}
+// }
 
 var a = 10;
 var b = 20;
